@@ -34,7 +34,12 @@ def stringintcmp_(a, b):
 
 stringintkey = cmp_to_key(stringintcmp_)
 
-
+''' 
+1. Download checkpoint.pt model from https://drive.google.com/file/d/1BAR712cVEqB8GR37fcEihRV_xOC-fZrZ/view?usp=share_link
+2. Add music to folder specified in argument "music_dir"
+3. Motion files are stored in "motions/" directory
+4. Renders of dancing stick-men are saved in "renders/" directory
+'''
 def run_edge_generation(
         feature_type='jukebox',
         out_length=30,
