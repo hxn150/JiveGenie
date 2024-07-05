@@ -1,0 +1,13 @@
+accelerate==0.31.0
+einops==0.8.0
+jukemirlib==0.0.0
+librosa==0.9.2
+matplotlib==3.9.0
+numpy==2.0.0
+p_tqdm==1.4.0
+pytorch3d==0.7.7
+scipy==1.14.0
+SoundFile==0.10.3.post1
+torch==2.3.1
+tqdm==4.45.0
+wandb==0.17.3
