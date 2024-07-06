@@ -1,0 +1,3 @@
+[submodule "EDGE"]
+	path = EDGE
+	url = https://github.com/Stanford-TML/EDGE.git

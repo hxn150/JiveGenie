@@ -10,10 +10,10 @@ import numpy as np
 import torch
 from tqdm import tqdm
 
-from EDGE.data.slice import slice_audio
+from data.slice import slice_audio
 from EDGE import EDGE
-from EDGE.data.audio_extraction.baseline_features import extract as baseline_extract
-from EDGE.data.audio_extraction.jukebox_features import extract as juke_extract
+from data.audio_extraction.baseline_features import extract as baseline_extract
+from data.audio_extraction.jukebox_features import extract as juke_extract
 
 
 # sort filenames that look like songname_slice{number}.ext

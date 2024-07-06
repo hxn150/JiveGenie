@@ -1,3 +1,5 @@
-__pycache__/
-MagicDance/
+__pycache__/**
 node_modules
+mmhuman3d
+checkpoint.pt
+rescue.sh
