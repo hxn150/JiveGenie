@@ -5,6 +5,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 import random
 
+import jukemirlib
 import numpy as np
 import torch
 from tqdm import tqdm
@@ -13,6 +14,7 @@ from EDGE.data.slice import slice_audio
 from EDGE import EDGE
 from EDGE.data.audio_extraction.baseline_features import extract as baseline_extract
 from EDGE.data.audio_extraction.jukebox_features import extract as juke_extract
+
 
 # sort filenames that look like songname_slice{number}.ext
 key_func = lambda x: int(os.path.splitext(x)[0].split("_")[-1].split("slice")[-1])
@@ -42,7 +44,7 @@ stringintkey = cmp_to_key(stringintcmp_)
 '''
 def run_edge_generation(
         feature_type='jukebox',
-        out_length=30,
+        out_length=3,
         processed_data_dir="data/dataset_backups/",
         render_dir="renders/",
         checkpoint="checkpoint.pt",
@@ -137,4 +139,3 @@ def run_edge_generation(
     torch.cuda.empty_cache()
     for temp_dir in temp_dir_list:
         temp_dir.cleanup()
-
