@@ -10,16 +10,16 @@ from mmhuman3d.core.visualization.visualize_keypoints2d import visualize_kp2d
 EDGE_api.run_edge_generation(
         feature_type='jukebox',
         out_length=5,
-        processed_data_dir="data/dataset_backups/",
-        render_dir="renders/",
-        checkpoint="/home/rgyhuang/private/JiveGenie/EDGE/checkpoint.pt",
-        music_dir="custom_music/",
+        processed_data_dir="./EDGE/data/dataset_backups/",
+        render_dir="./EDGE/renders/",
+        checkpoint="./EDGE/checkpoint.pt",
+        music_dir="./EDGE/custom_music",
         save_motions=True,
-        motion_save_dir="motions/",
+        motion_save_dir="./EDGE/SMPL-to-FBX/motions/",
         cache_features=True,
         no_render=False,
         use_cached_features=True,
-        feature_cache_dir="cache_features/"
+        feature_cache_dir="./EDGE/cache_features/"
         )
 
 # load SMPL motion data from model inference
@@ -41,4 +41,4 @@ mapped_coordinates = 500 * mapped_coordinates + np.array([512, 1520])
 # black background
 background = np.full((150, 1024, 1024, 3), 0)
 
-visualize_kp2d(mapped_coordinates, data_source='smpl', image_array=background, output_path='test_track-A.mp4', resolution=(1024, 1024), overwrite=True) #remove_raw_file=False)
+visualize_kp2d(mapped_coordinates, data_source='smpl', image_array=background, output_path='outputs/test_track-A.mp4', resolution=(1024, 1024), overwrite=True) #remove_raw_file=False)
