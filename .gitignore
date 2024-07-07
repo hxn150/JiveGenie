@@ -3,3 +3,9 @@ node_modules
 mmhuman3d
 EDGE_copy/checkpoint.pt
 rescue.sh
+.DS_Store
+.vscode/
+node_modules/
+*.log
+.idea/
+
