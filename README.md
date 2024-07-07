@@ -19,6 +19,6 @@ To run main.py do the following:
 
 7. In a separate terminal, run `npm run dev` to see the web app in action!
 
-If you would like a quick demo, go into `main.py` and set `use_cached_features=True` to generate dances from our sample set. To upload custom music files, ensure that files are in `.wav` format at most 10 seconds and that `use_cached_features=True` is set to false!
+If you would like a quick demo, go into `main.py` and set `use_cached_features=True` to generate dances from our sample set. To upload custom music files, ensure that files are in `.wav`, are 10 seconds long and that `use_cached_features=True` is set to false!
 
 \*Note: tested on Ubuntu22.04, dependencies may not work for MacOS/Windows
