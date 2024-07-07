@@ -5,6 +5,13 @@ import { useSwipeable } from 'react-swipeable';
 import axios from "axios";
 import ReactPlayer from 'react-player';
 
+export const openInNewTab = (url: string): void => {
+  const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
+  if (newWindow) newWindow.opener = null
+}
+
+export const onClickUrl = (url: string): (() => void) => () => openInNewTab(url)
+
 
 const SongCard = ({ onClick, song, onDelete, onSelect, isSelected }) => {
   const [offset, setOffset] = useState(0);
@@ -230,7 +237,7 @@ const JiveGenie = () => {
               )}
             </div>
 
-            <div className="bg-white rounded-lg p-4">
+            <div className="bg-white rounded-lg p-4 flex-1 flex flex-col">
               <h2 className="font-semibold mb-2">Controls</h2>
               <div className="flex items-center justify-between mb-4">
                 <span>Upload Music</span>
@@ -248,16 +255,40 @@ const JiveGenie = () => {
                     accept="audio/*"
                 />
               </div>
-              {/* <div>
-                <span>Speed</span>
-                <Slider
-                    value={[speed]}
-                    onValueChange={(value) => setSpeed(value[0])}
-                    max={2}
-                    step={0.1}
-                    className="mt-2"
-                />
-              </div> */}
+              <div className="flex items-center justify-between mb-4">
+                <span>Feedback</span>
+                <button
+                    className="p-1 rounded-full bg-gray-200 hover:bg-gray-300"
+                    onClick={onClickUrl('https://forms.gle/MjADDNBe2CphWZRN7')}
+                >
+                  <PlusCircle className="h-6 w-6"/>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold mb-4">Dance Inspos</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="aspect-video flex items-center justify-center text-gray-600">
+              Your TikTok Dances can go from this...
+            </div>
+            <iframe
+                src="https://www.tiktok.com/player/v1/6796802072114138374?_r=1&_t=8noWDyVX1d1"
+                className="w-full aspect-video"
+                frameBorder="0"
+                allow="autoplay; fullscreen"
+                allowFullScreen
+            />
+            <iframe
+                src="https://www.tiktok.com/player/v1/7352968566578236705?_r=1&_t=8noW3IxOEIR"
+                className="w-full aspect-video"
+                frameBorder="0"
+                allow="autoplay; fullscreen"
+                allowFullScreen
+            />
+            <div className=" aspect-video flex items-center justify-center text-gray-600">
+              to THIS!
             </div>
           </div>
         </div>
