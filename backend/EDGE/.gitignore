@@ -1,0 +1,13 @@
+train/
+test/
+edge_aistpp/
+dataset_backups/
+runs/
+wandb/
+renders/
+.ipynb_checkpoints/
+__pycache__/
+*.gif
+*.pt
+*.npy
+*.zip
