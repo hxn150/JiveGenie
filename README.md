@@ -1,50 +1,24 @@
-# Vite & NextUI Template
+# JiveGenie
 
-This is a template for creating applications using Vite and NextUI (v2).
+TechJam Repo
 
-[Try it on CodeSandbox](https://githubbox.com/nextui-org/vite-template)
+To run main.py do the following:
 
-## Technologies Used
+1. Setup conda environment:
+   `conda create --name <env> --file requirements.txt`
 
-- [Vite](https://vitejs.dev/guide/)
-- [NextUI](https://nextui.org)
-- [Tailwind CSS](https://tailwindcss.com)
-- [Tailwind Variants](https://tailwind-variants.org)
-- [TypeScript](https://www.typescriptlang.org)
-- [Framer Motion](https://www.framer.com/motion)
+2. Clone the [EDGE](https://github.com/Stanford-TML/EDGE.git) and follow installation instructions for [mmhuman3d](https://mmhuman3d.readthedocs.io/en/latest/install.html#) (cpu).
 
-## How to Use
+3. Download [checkpoint.pt](https://drive.google.com/file/d/1BAR712cVEqB8GR37fcEihRV_xOC-fZrZ/view?usp=share_link) and move it into the EDGE directory.
 
-To clone the project, run the following command:
+4. Move `EDGE_api.py` into the EDGE directory.
 
-```bash
-git clone https://github.com/nextui-org/vite-template.git
-```
+5. Run `npm install` to install all frontend dependencies
 
-### Install dependencies
+6. Start the flask server by using `flask run`
 
-You can use one of them `npm`, `yarn`, `pnpm`, `bun`, Example using `npm`:
+7. In a separate terminal, run `npm run dev` to see the web app in action!
 
-```bash
-npm install
-```
+If you would like a quick demo, go into `main.py` and set `use_cached_features=True` to generate dances from our sample set. To upload custom music files, ensure that files are in `.wav` format at most 10 seconds and that `use_cached_features=True` is set to false!
 
-### Run the development server
-
-```bash
-npm run dev
-```
-
-### Setup pnpm (optional)
-
-If you are using `pnpm`, you need to add the following code to your `.npmrc` file:
-
-```bash
-public-hoist-pattern[]=*@nextui-org/*
-```
-
-After modifying the `.npmrc` file, you need to run `pnpm install` again to ensure that the dependencies are installed correctly.
-
-## License
-
-Licensed under the [MIT license](https://github.com/nextui-org/vite-template/blob/main/LICENSE).
+\*Note: tested on Ubuntu22.04, dependencies may not work for MacOS/Windows
