@@ -1,9 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import { Slider } from '@nextui-org/slider';
 import { PlusCircle, X } from 'lucide-react';
 import { useSwipeable } from 'react-swipeable';
 
-const SongCard = ({ song, onDelete }) => {
+const SongCard = ({ song, onDelete, onSelect, isSelected }) => {
   const [offset, setOffset] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -30,8 +30,9 @@ const SongCard = ({ song, onDelete }) => {
           {...handlers}
           className={`relative bg-gray-100 p-2 rounded transition-all duration-300 ease-out ${
               isDeleting ? 'opacity-0' : ''
-          }`}
+          } ${isSelected ? 'border-2 border-blue-500' : ''}`}
           style={{ transform: `translateX(${offset}px)` }}
+          onClick={() => onSelect(song)}
       >
         <div className="absolute right-0 top-0 bottom-0 w-16 bg-red-500 flex items-center justify-center">
           <X className="text-white" />
@@ -46,18 +47,95 @@ const SongCard = ({ song, onDelete }) => {
 
 const JiveGenie = () => {
   const [songs, setSongs] = useState([]);
+  const [currentSongIndex, setCurrentSongIndex] = useState<number | null>(null);
   const [speed, setSpeed] = useState(1);
   const fileInputRef = useRef(null);
 
+  useEffect(() => {
+    const savedSongs = localStorage.getItem('jiveGenieSongs');
+    if (savedSongs) {
+      const parsedSongs = JSON.parse(savedSongs);
+      setSongs(parsedSongs);
+      if (parsedSongs.length > 0) {
+        setCurrentSongIndex(0);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (songs.length > 0) {
+      localStorage.setItem('jiveGenieSongs', JSON.stringify(songs));
+    }
+  }, [songs]);
+
   const handleUpload = (event) => {
-    const file = event.target.files[0];
+    const file = event.target.files?.[0];
     if (file) {
-      setSongs([...songs, { name: file.name, album: 'Unknown', artist: 'Unknown' }]);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const result = e.target?.result;
+        if (typeof result === 'string') {
+          const audio = new Audio(result);
+          audio.onloadedmetadata = () => {
+            let name = file.name;
+            let artist = 'Unknown';
+            let album = 'Unknown';
+
+            if ('mediaSession' in navigator && navigator.mediaSession.metadata) {
+              const metadata = navigator.mediaSession.metadata;
+              name = metadata.title || name;
+              artist = metadata.artist || artist;
+              album = metadata.album || album;
+            }
+
+            if (name === file.name) {
+              const parts = file.name.split('-').map(part => part.trim());
+              if (parts.length >= 2) {
+                artist = parts[0];
+                name = parts[1].split('.')[0];
+              }
+            }
+            const newSong = { name, artist, album };
+            setSongs(prevSongs => {
+              const newSongs = [...prevSongs, newSong];
+              setCurrentSongIndex(newSongs.length - 1);
+              return newSongs;
+            });
+          };
+        } else {
+          console.error('FileReader result is not a string');
+        }
+      };
+      reader.readAsDataURL(file);
     }
   };
 
   const handleDeleteSong = (index) => {
-    setSongs(songs.filter((_, i) => i !== index));
+    setSongs(prevSongs => {
+      const newSongs = prevSongs.filter((_, i) => i !== index);
+      setCurrentSongIndex(prevIndex => {
+        if (prevIndex === index) {
+          return newSongs.length > 0 ? 0 : null;
+        } else if (prevIndex !== null && prevIndex > index) {
+          return prevIndex - 1;
+        }
+        return prevIndex;
+      });
+      return newSongs;
+    });
+  };
+
+  const handleSelectSong = (song) => {
+    const index = songs.findIndex(s => s === song);
+    setCurrentSongIndex(index);
+  };
+
+  const currentSong = currentSongIndex !== null ? songs[currentSongIndex] : null;
+
+  const handleFileInputClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
   return (
@@ -68,10 +146,14 @@ const JiveGenie = () => {
             <div className="aspect-video max-h-screen bg-gray-300 rounded-lg mb-4"></div>
             <div className="flex justify-between items-center">
               <div>
-                <p className="font-semibold">Song Name</p>
-                <p className="text-sm text-gray-600">Album Name, Artist</p>
+                <p className="font-semibold">{currentSong ? currentSong.name : 'No song selected'}</p>
+                <p className="text-sm text-gray-600">
+                  {currentSong ? currentSong.artist : 'Select a song to start'}
+                </p>
               </div>
-              <button className="bg-blue-500 text-white px-4 py-2 rounded">Animate</button>
+              <button className="bg-blue-500 text-white px-4 py-2 rounded" disabled={!currentSong}>
+                Animate
+              </button>
             </div>
           </div>
 
@@ -87,6 +169,8 @@ const JiveGenie = () => {
                             key={index}
                             song={song}
                             onDelete={() => handleDeleteSong(index)}
+                            onSelect={handleSelectSong}
+                            isSelected={currentSongIndex === index}
                         />
                     ))}
                   </ul>
@@ -99,7 +183,7 @@ const JiveGenie = () => {
                 <span>Upload Music</span>
                 <button
                     className="p-1 rounded-full bg-gray-200 hover:bg-gray-300"
-                    onClick={() => fileInputRef.current.click()}
+                    onClick={handleFileInputClick}
                 >
                   <PlusCircle className="h-6 w-6" />
                 </button>
@@ -127,5 +211,4 @@ const JiveGenie = () => {
       </div>
   );
 };
-
 export default JiveGenie;
