@@ -195,16 +195,16 @@ const JiveGenie = () => {
                     accept="audio/*"
                 />
               </div>
-              <div>
-                <span>Speed</span>
-                <Slider
-                    value={[speed]}
-                    onValueChange={(value) => setSpeed(value[0])}
-                    max={2}
-                    step={0.1}
-                    className="mt-2"
-                />
-              </div>
+              {/*<div>*/}
+              {/*  <span>Speed</span>*/}
+              {/*  <Slider*/}
+              {/*      value={[speed]}*/}
+              {/*      onValueChange={(value) => setSpeed(value[0])}*/}
+              {/*      max={2}*/}
+              {/*      step={0.1}*/}
+              {/*      className="mt-2"*/}
+              {/*  />*/}
+              {/*</div>*/}
             </div>
           </div>
         </div>
