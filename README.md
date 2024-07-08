@@ -4,14 +4,14 @@ TechJam Repo
 
 To run main.py do the following:
 
-1. Setup conda environment:
+1. Setup conda environment using dependencies from `requirements.txt`:
    `conda create --name <env> --file requirements.txt`
 
 2. Follow installation instructions for [mmhuman3d](https://mmhuman3d.readthedocs.io/en/latest/install.html#) (cpu)*.
 
 3. Download [checkpoint.pt](https://drive.google.com/file/d/1BAR712cVEqB8GR37fcEihRV_xOC-fZrZ/view?usp=share_link) and move it into the `backend/EDGE` directory.
 
-6. Run `npm install` to install all frontend dependencies.
+6. Run `npm install` inside the `frontend` directory to install all frontend dependencies.
 
 7. Start the flask server by using `flask run`.
 
