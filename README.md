@@ -37,3 +37,8 @@ For a smoother experience, also ensure that you disable cache in the devtools of
 
 ![](https://github.com/hxn150/JiveGenie/blob/main/app_demo.gif)
 
+
+## References
+- [EDGE](https://github.com/Stanford-TML/EDGE/tree/main?tab=readme-ov-file)
+- [MMHuman3D](https://github.com/open-mmlab/mmhuman3d)
+
