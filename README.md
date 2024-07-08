@@ -25,4 +25,6 @@ The webapp is currently set to run a quick demo with pre-computed features, with
 - `backend/EDGE/SMPL-to-FBX`
 - `frontend/outputs`
 
-\*Note: tested on Ubuntu22.04, dependencies may not work for MacOS/Windows. For a smoother experience, also ensure that you disable cache in the devtools of whatever browser you are working from.
+\*Note: tested on Ubuntu22.04, dependencies may not work for MacOS/Windows. 
+
+For a smoother experience, also ensure that you disable cache in the devtools of whatever browser you are working from.
