@@ -13,7 +13,7 @@ To run main.py do the following:
 
 4. Move `EDGE_api.py` into the EDGE directory.
 
-5. Run `npm install` to install all frontend dependencies
+5. Run `npm install` inside the `frontend` directory to install all frontend dependencies
 
 6. Start the flask server by using `flask run`
 
@@ -21,4 +21,4 @@ To run main.py do the following:
 
 If you would like a quick demo, go into `main.py` and set `use_cached_features=True` to generate dances from our sample set. To upload custom music files, ensure that files are in `.wav`, are 10 seconds long and that `use_cached_features=True` is set to false!
 
-\*Note: tested on Ubuntu22.04, dependencies may not work for MacOS/Windows
+\*Note: tested on Ubuntu22.04, dependencies may not work for MacOS/Windows. For a smoother experience, also ensure that you disable cache in the devtools of whatever browser you are working from.

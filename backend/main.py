@@ -5,11 +5,15 @@ import numpy as np
 import sys
 sys.path.append('/home/rgyhuang/private/JiveGenie/backend/EDGE')
 import EDGE_api
-from flask import Flask, jsonify, request, session
+from flask import Flask, jsonify, request, Response
 from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 import os
 import moviepy.editor as mpe
+import json
+from pathlib import Path
+import wave
+import contextlib
 
 UPLOAD_FOLDER = './EDGE/custom_music'
 MODEL_OUTPUT_FOLDER = './EDGE/SMPL-to-FBX/motions'
@@ -24,14 +28,50 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+@app.route('/get_songs', methods=['GET'])
+@cross_origin()
+def getSongs():
+    songs = os.listdir(UPLOAD_FOLDER)
+    return Response(json.dumps(songs), mimetype='application/json')
+
+@app.route('/delete_song', methods=['POST'])
+@cross_origin()
+def deleteSong():
+    song_name = json.loads(request.data)['name']
+    print(song_name)
+    file = Path(f"{UPLOAD_FOLDER}/{song_name}/{song_name}.wav")
+    if file.is_file():
+        file.unlink()
+    file = Path(f"{UPLOAD_FOLDER}/{song_name}")
+    if file.rmdir():
+        file.unlink()
+    file = Path(f"{MODEL_OUTPUT_FOLDER}/{song_name}/test_{song_name}.pkl")
+    if file.is_file():
+        file.unlink()
+    file = Path(f"{MODEL_OUTPUT_FOLDER}/{song_name}")
+    if file.is_dir():
+        file.rmdir()
+    file = Path(f".EDGE/renders/test_{song_name}.mp4")
+    if file.is_file():
+        file.unlink()
+    file = Path(f".EDGE/renders/test_{song_name}.wav")
+    if file.is_file():
+        file.unlink()
+    file = Path(f"{RESULT_OUT_FOLDER}/test_{song_name}_sound.mp4")
+    if file.is_file():
+        file.unlink()
+    
+    return jsonify({'reply':'success'})
+    
+
 @app.route('/upload', methods=['POST'])
 @cross_origin()
 def upload():
      # check if the post request has the file part
-    target=os.path.join(UPLOAD_FOLDER)
+    file = request.files['file'] 
+    target=os.path.join(UPLOAD_FOLDER+f"/{file.filename[:-4]}")
     if not os.path.isdir(target):
         os.mkdir(target)
-    file = request.files['file'] 
     filename = secure_filename(file.filename)
     destination="/".join([target, filename])
     file.save(destination)
@@ -43,26 +83,33 @@ def upload():
 def main():
     if(os.listdir(UPLOAD_FOLDER) == 0):
         return jsonify({'reply': 'Error: No music files in directory!'})
+    
+    song = json.loads(request.data)['name']
+    with contextlib.closing(wave.open(UPLOAD_FOLDER+f"/{song}/{song}.wav",'r')) as f:
+        frames = f.getnframes()
+        rate = f.getframerate()
+        duration = frames // rate
+        print(duration)
     # run generation algorithm
     EDGE_api.run_edge_generation(
             feature_type='jukebox',
-            out_length=10,
+            out_length=duration,
             processed_data_dir="./EDGE/data/dataset_backups/",
             render_dir="./EDGE/renders/",
             checkpoint="./EDGE/checkpoint.pt",
-            music_dir=UPLOAD_FOLDER,
+            music_dir=f"{UPLOAD_FOLDER}/{song}",
             save_motions=True,
-            motion_save_dir="./EDGE/SMPL-to-FBX/motions/",
+            motion_save_dir=f"{MODEL_OUTPUT_FOLDER}/{song}",
             cache_features=True,
             no_render=True,
             use_cached_features=True,
-            feature_cache_dir="./EDGE/cache_features/"
+            feature_cache_dir=f"./EDGE/cache_features/{song}"
             )
 
     # load SMPL motion data from model inference
     
-    for filename in os.listdir(MODEL_OUTPUT_FOLDER):
-        with open(f'./EDGE/SMPL-to-FBX/motions/{filename}', 'rb') as f:
+    for filename in os.listdir(f"{MODEL_OUTPUT_FOLDER}/{song}"):
+        with open(f"{MODEL_OUTPUT_FOLDER}/{song}/test_{song}.pkl", 'rb') as f:
             data = pickle.load(f)
 
         # scale from 3d to 2d coordinates
@@ -82,7 +129,7 @@ def main():
         
 
         visualize_kp2d(mapped_coordinates, data_source='smpl', output_path=f'{RESULT_OUT_FOLDER}/{filename[:-4]}.mp4', resolution=(1024, 1024), overwrite=True) #remove_raw_file=False)
-        audio = mpe.AudioFileClip(f"{UPLOAD_FOLDER}/{filename[5:-4]}.wav")
+        audio = mpe.AudioFileClip(f"{UPLOAD_FOLDER}/{song}/{song}.wav")
         video1 = mpe.VideoFileClip(f'{RESULT_OUT_FOLDER}/{filename[:-4]}.mp4')
         final = video1.set_audio(audio)
         final.write_videofile(f'{RESULT_OUT_FOLDER}/{filename[:-4]}_sound.mp4')

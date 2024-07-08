@@ -4,6 +4,7 @@ import { PlusCircle, X } from 'lucide-react';
 import { useSwipeable } from 'react-swipeable';
 import axios from "axios";
 import ReactPlayer from 'react-player';
+import { TailSpin } from 'react-loader-spinner'
 
 export const openInNewTab = (url: string): void => {
   const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
@@ -49,8 +50,8 @@ const SongCard = ({ onClick, song, onDelete, onSelect, isSelected }) => {
           <X className="text-white" />
         </div>
         <div className="relative bg-white">
-          <p className="font-semibold">{song.name}</p>
-          <p className="text-sm text-gray-600">{song.album}, {song.artist}</p>
+          <p className="font-semibold">{song}</p>
+          {/* <p className="text-sm text-gray-600">{song.album}, {song.artist}</p> */}
         </div>
       </div>
   );
@@ -59,28 +60,35 @@ const SongCard = ({ onClick, song, onDelete, onSelect, isSelected }) => {
 const JiveGenie = () => {
   const [songs, setSongs] = useState([]);
   const [speed, setSpeed] = useState(1);
+  const [firstLoad, setFirstLoad] = useState(true)
   const [currSong, setCurrSong] = useState(-1)
   const [currentSongIndex, setCurrentSongIndex] = useState<number | null>(null);
-
-  // console.log(songs[currSong]['name'])
+  const [isLoading, setIsLoading] = useState(false)
   const fileInputRef = useRef(null);
-
-  useEffect(() => {
-    const savedSongs = localStorage.getItem('jiveGenieSongs');
-    if (savedSongs) {
-      const parsedSongs = JSON.parse(savedSongs);
-      setSongs(parsedSongs);
-      if (parsedSongs.length > 0) {
-        setCurrentSongIndex(0);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
+  const fetchSongs = () => {
+    axios({
+      method: "GET",
+      url: "http://localhost:5000/get_songs",
+    })
+      .then((response) => {
+      setSongs(response.data)
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response)
+        console.log(error.response.status)
+        console.log(error.response.headers)
+        }
+    })
+  }
+  if (firstLoad) {
+    fetchSongs()
     if (songs.length > 0) {
-      localStorage.setItem('jiveGenieSongs', JSON.stringify(songs));
+      setCurrSong(0)
     }
-  }, [songs]);
+    setFirstLoad(false)
+  }
+
+
   const handleUpload = (event) => {
     const file = event.target.files?.[0];
     console.log(file)
@@ -96,6 +104,8 @@ const JiveGenie = () => {
     .then((response) => {
       const res = response.data
       console.log(res)
+      fetchSongs()
+
     }).catch((error) => {
       if (error.response) {
         console.log(error.response)
@@ -103,7 +113,6 @@ const JiveGenie = () => {
         console.log(error.response.headers)
         }
     })
-
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -129,7 +138,7 @@ const JiveGenie = () => {
                 name = parts[1].split('.')[0];
               }
             }
-            const newSong = { name, artist, album };
+            const newSong = name;
             setSongs(prevSongs => {
               const newSongs = [...prevSongs, newSong];
               setCurrentSongIndex(newSongs.length - 1);
@@ -145,23 +154,47 @@ const JiveGenie = () => {
 
   };
 
-  function generate_dance() {
+  function generate_dance(index) {
+    setIsLoading(true);
     axios({
       method: "POST",
-      url:"http://localhost:5000/generate_dance",
+      url: "http://localhost:5000/generate_dance",
+      data: { name: songs[index] } 
     })
     .then((response) => {
       const res = response.data
       console.log(res)
+      setIsLoading(false);
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response)
+        console.log(error.response.status)
+        console.log(error.response.headers)
+      }
+      setIsLoading(false);
+
+    })
+
+  }
+
+  const handleDeleteSong = (index) => {
+    axios({
+      method: "POST",
+      url: "http://localhost:5000/delete_song",
+      data: { name: songs[index] } 
+    })
+    .then((response) => {
+      const res = response.data
+      console.log(res)
+      fetchSongs()
+
     }).catch((error) => {
       if (error.response) {
         console.log(error.response)
         console.log(error.response.status)
         console.log(error.response.headers)
         }
-    })}
-
-  const handleDeleteSong = (index) => {
+    })
     setSongs(prevSongs => {
       const newSongs = prevSongs.filter((_, i) => i !== index);
       setCurrentSongIndex(prevIndex => {
@@ -190,15 +223,15 @@ const JiveGenie = () => {
   }
 
   return (
-      <div className="flex flex-col p-4 w-full mx-auto">
+    <div className="flex flex-col p-4 w-full mx-auto">
         <h1 className="text-3xl font-bold mb-4">Jive Genie</h1>
         <div className="flex flex-col sm:flex-row gap-4 flex-grow overflow-hidden">
-          <div className="flex-1 flex flex-col bg-gray-200 rounded-lg p-4">
+        <div className="flex-1 flex flex-col bg-gray-200 rounded-lg p-4">
           <div className="aspect-video max-h-screen bg-gray-300 rounded-lg mb-4">
-            {(currSong !== -1) &&
+            {currSong !== -1 && !isLoading &&
               <ReactPlayer
               className='react-player fixed-bottom'
-                url={`outputs/test_${songs[currSong]['name'].slice(0,-4)}_sound.mp4`}
+                url={`outputs/test_${songs[currSong]}_sound.mp4`}
                 width='100%'
                 height='100%'
                 controls={true}
@@ -212,7 +245,10 @@ const JiveGenie = () => {
                   {currentSong ? currentSong.artist : 'Select a song to start'}
                 </p>
               </div>
-              <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={() => generate_dance()} disabled={!currentSong}>Animate</button>
+            {!isLoading && <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={() => generate_dance(currentSongIndex)} disabled={!currentSong}>Animate</button>}
+            <TailSpin 
+            visible={isLoading}
+            />
             </div>
           </div>
 
@@ -253,7 +289,8 @@ const JiveGenie = () => {
                     onChange={handleUpload}
                     className="hidden"
                     accept="audio/*"
-                />
+              />
+              
               </div>
               <div className="flex items-center justify-between mb-4">
                 <span>Feedback</span>
