@@ -11,11 +11,11 @@ To run main.py do the following:
 
 3. Download [checkpoint.pt](https://drive.google.com/file/d/1BAR712cVEqB8GR37fcEihRV_xOC-fZrZ/view?usp=share_link) and move it into the `backend/EDGE` directory.
 
-6. Run `npm install` inside the `frontend` directory to install all frontend dependencies.
+4. Run `npm install` inside the `frontend` directory to install all frontend dependencies.
 
-7. Start the flask server by using `flask run`.
+5. Start the flask server by using `flask run`.
 
-8. In a separate terminal, run `npm run dev` to see the web app in action!
+6. In a separate terminal, run `npm run dev` to see the web app in action!
 
 The webapp is currently set to run a quick demo with pre-computed features, with `use_cached_features=True` in the `run_edge_generation` function in `main.py`. To upload custom music files, ensure that files are in `.wav` and that `use_cached_features=True` is set to false! 
 
