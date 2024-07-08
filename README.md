@@ -4,7 +4,7 @@ Submission for TikTok Techjam 2024!
 
 ## Setup Instructions
 
-To run main.py do the following:
+To run our app do the following:
 
 1. Setup conda environment using dependencies from `requirements.txt`:
    `conda create --name <env> --file requirements.txt`
