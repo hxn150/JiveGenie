@@ -1,6 +1,8 @@
 # JiveGenie
 
-TechJam Repo
+Submission for TikTok Techjam 2024!
+
+## Setup Instructions
 
 To run main.py do the following:
 
@@ -30,3 +32,8 @@ To reset the project and remove all demo/previous dance generation info, remove 
 \*Note: tested on Ubuntu22.04, dependencies may not work for MacOS/Windows. 
 
 For a smoother experience, also ensure that you disable cache in the devtools of whatever browser you are working from.
+
+## Short Demo
+
+![](https://github.com/hxn150/JiveGenie/app_demo.gif)
+
