@@ -1,5 +1,5 @@
 # JiveGenie
-
+![](https://github.com/hxn150/JiveGenie/blob/main/banner.png)
 Submission for TikTok Techjam 2024!
 
 ## Setup Instructions
