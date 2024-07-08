@@ -35,5 +35,5 @@ For a smoother experience, also ensure that you disable cache in the devtools of
 
 ## Short Demo
 
-![](https://github.com/hxn150/JiveGenie/main/app_demo.gif)
+![](https://github.com/hxn150/JiveGenie/blob/main/app_demo.gif)
 
