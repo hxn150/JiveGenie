@@ -17,7 +17,7 @@ To run main.py do the following:
 
 8. In a separate terminal, run `npm run dev` to see the web app in action!
 
-The webapp is currently set to run a quick demo with pre-computed features, with `use_cached_features=True` in the `run_edge_generation` function in `main.py`. To upload custom music files, ensure that files are in `.wav`, are 10 seconds long and that `use_cached_features=True` is set to false! To reset the project and remove all demo/previous dance generation info, remove the files in the following directories:
+The webapp is currently set to run a quick demo with pre-computed features, with `use_cached_features=True` in the `run_edge_generation` function in `main.py`. To upload custom music files, ensure that files are in `.wav` and that `use_cached_features=True` is set to false! To reset the project and remove all demo/previous dance generation info, remove the files in the following directories:
 
 - `backend/EDGE/custom_music`
 - `backend/EDGE/cache_features`
