@@ -1,8 +1,9 @@
 import React, {useState, useRef, useEffect} from 'react';
-import { Slider } from '@nextui-org/slider';
 import { PlusCircle, X } from 'lucide-react';
 import { useSwipeable } from 'react-swipeable';
-import TikTokLogin from './TikTokLogin.tsx';
+import logo from '../components/jg.png';
+import '@/pages/styles.css';
+
 
 export const openInNewTab = (url: string): void => {
   const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
@@ -22,7 +23,7 @@ const SongCard = ({ song, onDelete, onSelect, isSelected }) => {
       }
     },
     onSwipedLeft: (eventData) => {
-      if (eventData.deltaX < -100) {
+      if (eventData.deltaX < -10) {
         setIsDeleting(true);
         setTimeout(() => onDelete(), 300);
       } else {
@@ -32,6 +33,8 @@ const SongCard = ({ song, onDelete, onSelect, isSelected }) => {
     onSwipedRight: () => setOffset(0),
     trackMouse: true,
   });
+
+  // const deleteButtonOpacity = Math.min(Math.abs(offset) / 50, 1);
 
   return (
       <div
@@ -148,7 +151,10 @@ const JiveGenie = () => {
 
   return (
       <div className="flex flex-col p-4 w-full mx-auto">
-        <h1 className="text-3xl font-bold mb-4">Jive Genie</h1>
+        <header className="flex items-center mb-4">
+  <img src={logo} alt="JiveGenie Logo" className="h-12 w-auto mr-4" />
+  <h1 className="text-4xl font-normal" style={{ fontFamily: "Monoton" }}>JiveGenie</h1>
+</header>
         <div className="flex flex-col sm:flex-row gap-4 flex-grow overflow-hidden">
           <div className="flex-1 flex flex-col bg-gray-200 rounded-lg p-4">
             <div className="aspect-video max-h-screen bg-gray-300 rounded-lg mb-4"></div>
@@ -216,18 +222,8 @@ const JiveGenie = () => {
           </div>
         </div>
         <div className="mt-8">
-          <h2 className="text-2xl font-bold mb-4">Dance Inspos</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="aspect-video flex items-center justify-center text-gray-600">
-              Your TikTok Dances can go from this...
-            </div>
-            <iframe
-                src="https://www.tiktok.com/player/v1/6796802072114138374?_r=1&_t=8noWDyVX1d1"
-                className="w-full aspect-video"
-                frameBorder="0"
-                allow="autoplay; fullscreen"
-                allowFullScreen
-            />
+          <header className="text-4xl font-bold mb-8">Dance Inspiration Gallery ⭐</header>
+          <div className="grid grid-cols-3 gap-8">
             <iframe
                 src="https://www.tiktok.com/player/v1/7352968566578236705?_r=1&_t=8noW3IxOEIR"
                 className="w-full aspect-video"
@@ -235,9 +231,44 @@ const JiveGenie = () => {
                 allow="autoplay; fullscreen"
                 allowFullScreen
             />
-            <div className=" aspect-video flex items-center justify-center text-gray-600">
+            <iframe
+                src="https://www.tiktok.com/player/v1/7338052786082434305?_r=1&_t=8oKbkrhmdSh"
+                className="w-full aspect-video"
+                frameBorder="0"
+                allow="autoplay; fullscreen"
+                allowFullScreen
+            />
+            <iframe
+                src="https://www.tiktok.com/player/v1/7393135674880265515?lang=en"
+                className="w-full aspect-video"
+                frameBorder="0"
+                allow="autoplay; fullscreen"
+                allowFullScreen
+            />
+            <iframe
+                src="https://www.tiktok.com/player/v1/7385297562040929579?lang=en"
+                className="w-full aspect-video"
+                frameBorder="0"
+                allow="autoplay; fullscreen"
+                allowFullScreen
+            />
+            <iframe
+                src="https://www.tiktok.com/player/v1/7345421284068789509?lang=en&q=dance&t=1721957195756"
+                className="w-full aspect-video"
+                frameBorder="0"
+                allow="autoplay; fullscreen"
+                allowFullScreen
+            />
+            <iframe
+                src="https://www.tiktok.com/player/v1/7342665531939458309?lang=en&q=shidaa%20and%20nolen&t=1721957268394"
+                className="w-full aspect-video"
+                frameBorder="0"
+                allow="autoplay; fullscreen"
+                allowFullScreen
+            />
+            {/* <div className=" aspect-video flex items-center justify-center text-gray-600">
               to THIS!
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
