@@ -3,7 +3,7 @@ from mmhuman3d.core.visualization.visualize_keypoints2d import visualize_kp2d
 import pickle
 import numpy as np
 import sys
-sys.path.append('/home/roygyhuang/JiveGenie/backend/EDGE')
+sys.path.append('/home/rghuang/JiveGenie/backend/EDGE')
 import EDGE_api
 from flask import Flask, jsonify, request, Response, render_template
 from flask_cors import CORS, cross_origin

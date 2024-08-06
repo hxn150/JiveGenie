@@ -187,27 +187,29 @@ pip_install wandb
 pip_install p_tqdm
 pip_install moviepy
 sudo apt-get install libsndfile1
+sudo apt-get install gcc
+sudo apt-get update && sudo apt-get install ffmpeq libsm6 libxext6 -y
+
 
 # install jukemirlib and EDGE dependencies
 echo_info "------ Installing EDGE packages ------"
 pip_install git+https://github.com/rodrigo-castellon/jukemirlib.git
-cd backend/EDGE
-cd ../..
-
 
 # install pytorch3d
 echo_info "------ Installing pytorch3d packages ------"
 conda_raw_install -c conda_forge ffmpeg
 conda_install -c fvcore -c iopath -c conda-forge fvcore iopath -y
 conda_install -c bottler nvidiacub -y
-conda_install -c pytorch3d pytorch3d
+conda_install pytorch3d -c pytorch3d
 
 # install mmhuman3d
 echo_info "------ Installing mmhuman3d packages ------"
 
-pip_install "mmcv-full>=1.3.17,<1.6.0" -f https://download.openmmlab.com/mmcv/dist/cu121/torch2.4.0/index.html
+pip_install torch==2.0.0+cu117 torchvision==0.15.1+cu117 --index-url https://download.pytorch.org/whl/cu117
+pip_install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cpu/torch2.0.0/index.html
 git clone https://github.com/open-mmlab/mmhuman3d.git
-
+cd mmhuman3d
+pip install -v -e .
 
 # Installation ended
 end_time=$(date)

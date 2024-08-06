@@ -6,15 +6,19 @@ Submission for TikTok Techjam 2024!
 
 To run our app do the following:
 
-1. Setup conda environment by running `bash setup_conda.sh`
+1. Create a conda environment with `conda create -n env_name python=3.10`.
 
-2. Download [checkpoint.pt](https://drive.google.com/file/d/1BAR712cVEqB8GR37fcEihRV_xOC-fZrZ/view?usp=share_link) and move it into the `backend/EDGE` directory.
+2. Activate conda environment with `conda activate env_name`.
 
-3. Run `npm install` inside the `frontend` directory to install all frontend dependencies.
+3. Setup conda environment by running `bash setup_conda.sh`.
 
-4. Start the flask server by using `flask run`.
+4. Download [checkpoint.pt](https://drive.google.com/file/d/1BAR712cVEqB8GR37fcEihRV_xOC-fZrZ/view?usp=share_link) and move it into the `backend/EDGE` directory.
 
-5. In a separate terminal, run `npm run dev` to see the web app in action!
+5. Run `npm install` inside the `frontend` directory to install all frontend dependencies.
+
+6. Start the flask server by using `python main.py` in the `backend` directory.
+
+7. In a separate terminal, run `npm run dev` to see the web app in action!
 
 \*Note: tested on Ubuntu22.04, dependencies may not work for MacOS/Windows. 
 
