@@ -8,4 +8,5 @@ rescue.sh
 node_modules/
 *.log
 .idea/
+pytorch3d
 

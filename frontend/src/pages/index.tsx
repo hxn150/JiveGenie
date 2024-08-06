@@ -5,6 +5,8 @@ import { useSwipeable } from 'react-swipeable';
 import axios from "axios";
 import ReactPlayer from 'react-player';
 import { TailSpin } from 'react-loader-spinner'
+import logo from '../components/jg.png';
+import '@/pages/styles.css';
 
 export const openInNewTab = (url: string): void => {
   const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
@@ -25,7 +27,7 @@ const SongCard = ({ onClick, song, onDelete, onSelect, isSelected }) => {
       }
     },
     onSwipedLeft: (eventData) => {
-      if (eventData.deltaX < -100) {
+      if (eventData.deltaX < -10) {
         setIsDeleting(true);
         setTimeout(() => onDelete(), 300);
       } else {
@@ -38,22 +40,21 @@ const SongCard = ({ onClick, song, onDelete, onSelect, isSelected }) => {
   });
 
   return (
-      <div
-          {...handlers}
-          className={`relative bg-gray-100 p-2 rounded transition-all duration-300 ease-out ${
-              isDeleting ? 'opacity-0' : ''
-          } ${isSelected ? 'border-2 border-blue-500' : ''}`}
+    <div
+      {...handlers}
+      className={`relative bg-gray-100 p-2 rounded transition-all duration-300 ease-out ${isDeleting ? 'opacity-0' : ''
+        } ${isSelected ? 'border-2 border-blue-500' : ''}`}
       style={{ transform: `translateX(${offset}px)` }}
       onClick={() => onSelect(song)}
-      >
-        <div className="absolute right-0 top-0 bottom-0 w-16 bg-red-500 flex items-center justify-center">
-          <X className="text-white" />
-        </div>
-        <div className="relative bg-white">
-          <p className="font-semibold">{song}</p>
-          {/* <p className="text-sm text-gray-600">{song.album}, {song.artist}</p> */}
-        </div>
+    >
+      <div className="absolute right-0 top-0 bottom-0 w-16 bg-red-500 flex items-center justify-center">
+        <X className="text-white" />
       </div>
+      <div className="relative bg-white">
+        <p className="font-semibold">{song}</p>
+        {/* <p className="text-sm text-gray-600">{song.album}, {song.artist}</p> */}
+      </div>
+    </div>
   );
 };
 
@@ -65,20 +66,22 @@ const JiveGenie = () => {
   const [currentSongIndex, setCurrentSongIndex] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false)
   const fileInputRef = useRef(null);
+  const url = 'http://127.0.0.1:8080/'
+
   const fetchSongs = () => {
     axios({
       method: "GET",
-      url: "http://localhost:5000/get_songs",
+      url: url+"get_songs",
     })
       .then((response) => {
-      setSongs(response.data)
-    }).catch((error) => {
-      if (error.response) {
-        console.log(error.response)
-        console.log(error.response.status)
-        console.log(error.response.headers)
+        setSongs(response.data)
+      }).catch((error) => {
+        if (error.response) {
+          console.log(error.response)
+          console.log(error.response.status)
+          console.log(error.response.headers)
         }
-    })
+      })
   }
   if (firstLoad) {
     fetchSongs()
@@ -95,24 +98,24 @@ const JiveGenie = () => {
     const data = new FormData()
     data.append('file', file)
     data.append('filename', file.name)
-    
+
     axios({
       method: "POST",
-      url: "http://localhost:5000/upload",
+      url: url+"upload",
       data: data
     })
-    .then((response) => {
-      const res = response.data
-      console.log(res)
-      fetchSongs()
+      .then((response) => {
+        const res = response.data
+        console.log(res)
+        fetchSongs()
 
-    }).catch((error) => {
-      if (error.response) {
-        console.log(error.response)
-        console.log(error.response.status)
-        console.log(error.response.headers)
+      }).catch((error) => {
+        if (error.response) {
+          console.log(error.response)
+          console.log(error.response.status)
+          console.log(error.response.headers)
         }
-    })
+      })
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -149,8 +152,9 @@ const JiveGenie = () => {
           console.error('FileReader result is not a string');
         }
       };
-      reader.readAsDataURL(file);    }
-  
+      reader.readAsDataURL(file);
+    }
+
 
   };
 
@@ -158,43 +162,43 @@ const JiveGenie = () => {
     setIsLoading(true);
     axios({
       method: "POST",
-      url: "http://localhost:5000/generate_dance",
-      data: { name: songs[index] } 
+      url: url+"generate_dance",
+      data: { name: songs[index] }
     })
-    .then((response) => {
-      const res = response.data
-      console.log(res)
-      setIsLoading(false);
-    }).catch((error) => {
-      if (error.response) {
-        console.log(error.response)
-        console.log(error.response.status)
-        console.log(error.response.headers)
-      }
-      setIsLoading(false);
+      .then((response) => {
+        const res = response.data
+        console.log(res)
+        setIsLoading(false);
+      }).catch((error) => {
+        if (error.response) {
+          console.log(error.response)
+          console.log(error.response.status)
+          console.log(error.response.headers)
+        }
+        setIsLoading(false);
 
-    })
+      })
 
   }
 
   const handleDeleteSong = (index) => {
     axios({
       method: "POST",
-      url: "http://localhost:5000/delete_song",
-      data: { name: songs[index] } 
+      url: url+"delete_song",
+      data: { name: songs[index] }
     })
-    .then((response) => {
-      const res = response.data
-      console.log(res)
-      fetchSongs()
+      .then((response) => {
+        const res = response.data
+        console.log(res)
+        fetchSongs()
 
-    }).catch((error) => {
-      if (error.response) {
-        console.log(error.response)
-        console.log(error.response.status)
-        console.log(error.response.headers)
+      }).catch((error) => {
+        if (error.response) {
+          console.log(error.response)
+          console.log(error.response.status)
+          console.log(error.response.headers)
         }
-    })
+      })
     setSongs(prevSongs => {
       const newSongs = prevSongs.filter((_, i) => i !== index);
       setCurrentSongIndex(prevIndex => {
@@ -208,7 +212,7 @@ const JiveGenie = () => {
       return newSongs;
     });
   };
-  
+
   const handleSelectSong = (song) => {
     const index = songs.findIndex(s => s === song);
     setCurrentSongIndex(index);
@@ -224,112 +228,137 @@ const JiveGenie = () => {
 
   return (
     <div className="flex flex-col p-4 w-full mx-auto">
-        <h1 className="text-3xl font-bold mb-4">Jive Genie</h1>
-        <div className="flex flex-col sm:flex-row gap-4 flex-grow overflow-hidden">
+      <header className="flex items-center mb-4">
+        <img src={logo} alt="JiveGenie Logo" className="h-12 w-auto mr-4" />
+        <h1 className="text-4xl font-normal" style={{ fontFamily: "Monoton" }}>JiveGenie</h1>
+      </header>
+      <div className="flex flex-col sm:flex-row gap-4 flex-grow overflow-hidden">
         <div className="flex-1 flex flex-col bg-gray-200 rounded-lg p-4">
           <div className="aspect-video max-h-screen bg-gray-300 rounded-lg mb-4">
             {currSong !== -1 && !isLoading &&
               <ReactPlayer
-              className='react-player fixed-bottom'
+                className='react-player fixed-bottom'
                 url={`outputs/test_${songs[currSong]}_sound.mp4`}
                 width='100%'
                 height='100%'
                 controls={true}
               />
-            } 
-            </div>
-            <div className="flex justify-between items-center">
-              <div>
-              <p className="font-semibold">{currentSong ? currentSong.name : 'No song selected'}</p>
-                <p className="text-sm text-gray-600">
-                  {currentSong ? currentSong.artist : 'Select a song to start'}
-                </p>
-              </div>
-            {!isLoading && <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={() => generate_dance(currentSongIndex)} disabled={!currentSong}>Animate</button>}
-            <TailSpin 
-            visible={isLoading}
-            />
-            </div>
+            }
           </div>
-
-          <div className="w-64 space-y-4">
-            <div className="bg-white rounded-lg p-4">
-              <h2 className="font-semibold mb-2">Your Jives</h2>
-              {songs.length === 0 ? (
-                  <p className="text-gray-500">Upload songs to start dancing!</p>
-              ) : (
-                  <ul className="space-y-2">
-                    {songs.map((song, index) => (
-                        <SongCard
-                            key={index}
-                            song={song}
-                            onClick={() => setCurrSong(index)}
-                            onDelete={() => handleDeleteSong(index)}
-                            onSelect={handleSelectSong}
-                            isSelected={currentSongIndex === index}
-                        />
-                    ))}
-                  </ul>
-              )}
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="font-semibold">{currentSong ? currentSong.name : 'No song selected'}</p>
+              <p className="text-sm text-gray-600">
+                {currentSong ? currentSong.artist : 'Select a song to start'}
+              </p>
             </div>
-
-            <div className="bg-white rounded-lg p-4 flex-1 flex flex-col">
-              <h2 className="font-semibold mb-2">Controls</h2>
-              <div className="flex items-center justify-between mb-4">
-                <span>Upload Music</span>
-                <button
-                    className="p-1 rounded-full bg-gray-200 hover:bg-gray-300"
-                    onClick={handleFileInputClick}
-                >
-                  <PlusCircle className="h-6 w-6" />
-                </button>
-                <input
-                    type="file"
-                    ref={fileInputRef}
-                    onChange={handleUpload}
-                    className="hidden"
-                    accept="audio/*"
-              />
-              
-              </div>
-              <div className="flex items-center justify-between mb-4">
-                <span>Feedback</span>
-                <button
-                    className="p-1 rounded-full bg-gray-200 hover:bg-gray-300"
-                    onClick={onClickUrl('https://forms.gle/MjADDNBe2CphWZRN7')}
-                >
-                  <PlusCircle className="h-6 w-6"/>
-                </button>
-              </div>
-            </div>
+            {!isLoading && <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={() => generate_dance(currentSongIndex)} disabled={!currentSong}>Animate</button>}
+            <TailSpin
+              visible={isLoading}
+            />
           </div>
         </div>
-        <div className="mt-8">
-          <h2 className="text-2xl font-bold mb-4">Dance Inspos</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="aspect-video flex items-center justify-center text-gray-600">
-              Your TikTok Dances can go from this...
+
+        <div className="w-64 space-y-4">
+          <div className="bg-white rounded-lg p-4">
+            <h2 className="font-semibold mb-2">Your Jives</h2>
+            {songs.length === 0 ? (
+              <p className="text-gray-500">Upload songs to start dancing!</p>
+            ) : (
+              <ul className="space-y-2">
+                {songs.map((song, index) => (
+                  <SongCard
+                    key={index}
+                    song={song}
+                    onClick={() => setCurrSong(index)}
+                    onDelete={() => handleDeleteSong(index)}
+                    onSelect={handleSelectSong}
+                    isSelected={currentSongIndex === index}
+                  />
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div className="bg-white rounded-lg p-4 flex-1 flex flex-col">
+            <h2 className="font-semibold mb-2">Controls</h2>
+            <div className="flex items-center justify-between mb-4">
+              <span>Upload Music</span>
+              <button
+                className="p-1 rounded-full bg-gray-200 hover:bg-gray-300"
+                onClick={handleFileInputClick}
+              >
+                <PlusCircle className="h-6 w-6" />
+              </button>
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleUpload}
+                className="hidden"
+                accept="audio/*"
+              />
+
             </div>
-            <iframe
-                src="https://www.tiktok.com/player/v1/6796802072114138374?_r=1&_t=8noWDyVX1d1"
-                className="w-full aspect-video"
-                frameBorder="0"
-                allow="autoplay; fullscreen"
-                allowFullScreen
-            />
-            <iframe
-                src="https://www.tiktok.com/player/v1/7352968566578236705?_r=1&_t=8noW3IxOEIR"
-                className="w-full aspect-video"
-                frameBorder="0"
-                allow="autoplay; fullscreen"
-                allowFullScreen
-            />
-            <div className=" aspect-video flex items-center justify-center text-gray-600">
-              to THIS!
+            <div className="flex items-center justify-between mb-4">
+              <span>Feedback</span>
+              <button
+                className="p-1 rounded-full bg-gray-200 hover:bg-gray-300"
+                onClick={onClickUrl('https://forms.gle/MjADDNBe2CphWZRN7')}
+              >
+                <PlusCircle className="h-6 w-6" />
+              </button>
             </div>
           </div>
         </div>
       </div>
+      <div className="mt-8">
+          <header className="text-4xl font-bold mb-8">Dance Inspiration Gallery ⭐</header>
+          <div className="grid grid-cols-3 gap-8">
+          <iframe
+            src="https://www.tiktok.com/player/v1/7352968566578236705?_r=1&_t=8noW3IxOEIR"
+            className="w-full aspect-video"
+            frameBorder="0"
+            allow="autoplay; fullscreen"
+            allowFullScreen
+          />
+          <iframe
+            src="https://www.tiktok.com/player/v1/7338052786082434305?_r=1&_t=8oKbkrhmdSh"
+            className="w-full aspect-video"
+            frameBorder="0"
+            allow="autoplay; fullscreen"
+            allowFullScreen
+        />
+        <iframe
+            src="https://www.tiktok.com/player/v1/7393135674880265515?lang=en"
+            className="w-full aspect-video"
+            frameBorder="0"
+            allow="autoplay; fullscreen"
+            allowFullScreen
+        />
+        <iframe
+            src="https://www.tiktok.com/player/v1/7385297562040929579?lang=en"
+            className="w-full aspect-video"
+            frameBorder="0"
+            allow="autoplay; fullscreen"
+            allowFullScreen
+        />
+        <iframe
+            src="https://www.tiktok.com/player/v1/7345421284068789509?lang=en&q=dance&t=1721957195756"
+            className="w-full aspect-video"
+            frameBorder="0"
+            allow="autoplay; fullscreen"
+            allowFullScreen
+          />
+        <iframe
+            src="https://www.tiktok.com/player/v1/7342665531939458309?lang=en&q=shidaa%20and%20nolen&t=1721957268394"
+            className="w-full aspect-video"
+            frameBorder="0"
+            allow="autoplay; fullscreen"
+            allowFullScreen
+        />
+        </div>
+      </div>
+    </div>
   );
 };
 

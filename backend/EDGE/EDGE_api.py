@@ -68,8 +68,11 @@ def run_edge_generation(
         # all subdirectories
         dir_list = glob.glob(os.path.join(feature_cache_dir, "*/"))
         for dir in dir_list:
+            print(dir)
             file_list = sorted(glob.glob(f"{dir}/*.wav"), key=stringintkey)
             juke_file_list = sorted(glob.glob(f"{dir}/*.npy"), key=stringintkey)
+            print(file_list)
+            print(juke_file_list)
             assert len(file_list) == len(juke_file_list)
             # random chunk after sanity check
             rand_idx = random.randint(0, len(file_list) - sample_size)

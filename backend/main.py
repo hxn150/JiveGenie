@@ -3,9 +3,9 @@ from mmhuman3d.core.visualization.visualize_keypoints2d import visualize_kp2d
 import pickle
 import numpy as np
 import sys
-sys.path.append('/home/rgyhuang/private/JiveGenie/backend/EDGE')
+sys.path.append('/home/roygyhuang/JiveGenie/backend/EDGE')
 import EDGE_api
-from flask import Flask, jsonify, request, Response
+from flask import Flask, jsonify, request, Response, render_template
 from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 import os
@@ -14,10 +14,15 @@ import json
 from pathlib import Path
 import wave
 import contextlib
+import shutil
+import io
+import zipfile
+import time
 
 UPLOAD_FOLDER = './EDGE/custom_music'
 MODEL_OUTPUT_FOLDER = './EDGE/SMPL-to-FBX/motions'
-RESULT_OUT_FOLDER = '../frontend/outputs'
+RESULT_OUT_FOLDER = '../frontend/output'
+FEATURE_CACHE_DIR = './EDGE/cache_features' 
 ALLOWED_EXTENSIONS = {'.wav'}
 
 app = Flask(__name__)
@@ -28,10 +33,16 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+@app.route('/')
+@cross_origin()
+def index():
+    return render_template('index.html')
+
 @app.route('/get_songs', methods=['GET'])
 @cross_origin()
 def getSongs():
     songs = os.listdir(UPLOAD_FOLDER)
+
     return Response(json.dumps(songs), mimetype='application/json')
 
 @app.route('/delete_song', methods=['POST'])
@@ -60,6 +71,9 @@ def deleteSong():
     file = Path(f"{RESULT_OUT_FOLDER}/test_{song_name}_sound.mp4")
     if file.is_file():
         file.unlink()
+    file = Path(f"{FEATURE_CACHE_DIR}/{song_name}")
+    if file.is_dir():
+        shutil.rmtree(f"{FEATURE_CACHE_DIR}/{song_name}")
     
     return jsonify({'reply':'success'})
     
@@ -91,6 +105,9 @@ def main():
         duration = frames // rate
         print(duration)
     # run generation algorithm
+    file = Path(f"./EDGE/cache_features/{song}")
+    use_cache_features = True if file.is_dir() else False
+
     EDGE_api.run_edge_generation(
             feature_type='jukebox',
             out_length=duration,
@@ -102,12 +119,11 @@ def main():
             motion_save_dir=f"{MODEL_OUTPUT_FOLDER}/{song}",
             cache_features=True,
             no_render=True,
-            use_cached_features=True,
+            use_cached_features=use_cache_features,
             feature_cache_dir=f"./EDGE/cache_features/{song}"
             )
 
     # load SMPL motion data from model inference
-    
     for filename in os.listdir(f"{MODEL_OUTPUT_FOLDER}/{song}"):
         with open(f"{MODEL_OUTPUT_FOLDER}/{song}/test_{song}.pkl", 'rb') as f:
             data = pickle.load(f)
@@ -138,3 +154,6 @@ def main():
 
 
     return jsonify({'reply':'success'})
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port='8080', debug=True)
