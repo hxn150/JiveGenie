@@ -14,13 +14,13 @@ To run our app do the following:
 
 4. Download [checkpoint.pt](https://drive.google.com/file/d/1BAR712cVEqB8GR37fcEihRV_xOC-fZrZ/view?usp=share_link) and move it into the `backend/EDGE` directory.
 
-5. Run `npm install` inside the `frontend` directory to install all frontend dependencies.
+5. Run `bash setup_frontend.sh` inside the `frontend` directory to install all frontend dependencies.
 
 6. Start the flask server by using `python main.py` in the `backend` directory.
 
-7. In a separate terminal, run `npm run dev` to see the web app in action!
+7. In a separate terminal, run `sudo npm run dev` in the `frontend` to see the web app in action!
 
-\*Note: tested on Ubuntu22.04, dependencies may not work for MacOS/Windows. 
+\*Note: tested on Ubuntu22.04, dependencies may not work for MacOS/Windows. Also, this project is **very** compute heavy lol (needs 12+ cpu cores to run smoothly). 
 
 For a smoother experience, also ensure that you disable cache in the devtools of whatever browser you are working from.
 

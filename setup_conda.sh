@@ -188,7 +188,6 @@ pip_install p_tqdm
 pip_install moviepy
 sudo apt-get install libsndfile1
 sudo apt-get install gcc
-sudo apt-get update && sudo apt-get install ffmpeq libsm6 libxext6 -y
 
 
 # install jukemirlib and EDGE dependencies
@@ -210,6 +209,9 @@ pip_install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cpu/torch2.0.0
 git clone https://github.com/open-mmlab/mmhuman3d.git
 cd mmhuman3d
 pip install -v -e .
+
+
+sudo apt-get update && sudo apt-get install ffmpeg libsm6 libxext6 -y
 
 # Installation ended
 end_time=$(date)

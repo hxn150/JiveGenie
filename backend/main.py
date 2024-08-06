@@ -21,7 +21,7 @@ import time
 
 UPLOAD_FOLDER = './EDGE/custom_music'
 MODEL_OUTPUT_FOLDER = './EDGE/SMPL-to-FBX/motions'
-RESULT_OUT_FOLDER = '../frontend/output'
+RESULT_OUT_FOLDER = '../frontend/outputs'
 FEATURE_CACHE_DIR = './EDGE/cache_features' 
 ALLOWED_EXTENSIONS = {'.wav'}
 
@@ -118,7 +118,7 @@ def main():
             save_motions=True,
             motion_save_dir=f"{MODEL_OUTPUT_FOLDER}/{song}",
             cache_features=True,
-            no_render=True,
+            no_render=False,
             use_cached_features=use_cache_features,
             feature_cache_dir=f"./EDGE/cache_features/{song}"
             )
