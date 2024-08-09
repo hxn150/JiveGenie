@@ -1,6 +1,5 @@
-# JiveGenie
+# JiveGenie (**1st Place USA** for TikTok Techjam 2024!)
 ![](https://github.com/hxn150/JiveGenie/blob/main/banner.png)
-Submission for TikTok Techjam 2024!
 
 ## Setup Instructions
 
